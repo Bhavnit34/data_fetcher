@@ -1,18 +1,39 @@
 var request = require('request');
 var winston = require('winston');
+var myArgs = require('optimist').argv,
+    help = 'This would be a great place for real help information.';
 
+
+// handle command line args
+if ((myArgs.h)||(myArgs.help)) {
+    console.log(help);
+    process.exit(0);
+}
+var logPath = __dirname + "/logs/";
+if (myArgs.logPath) {
+    logPath = myArgs.logPath;
+}
+var logLevel = "info";
+if (myArgs.logLevel) {
+    logLevel = myArgs.logLevel;
+}
+
+// set up logger
 var logger = new (winston.Logger)({
     transports: [
         new (winston.transports.Console)({
             "timestamp":true,
-            "colorize": true
-
+            "colorize": true,
+            "level": logLevel
         }),
-        new (winston.transports.File)({ filename: 'D:/data_fetcher/log/fetcher.log' })
+        new (winston.transports.File)({
+            filename: logPath + "/fetcher.log",
+            "level": logLevel
+        })
     ]
 });
 
-
+logger.debug("logPath = " + logPath);
 var endpoint = "http://localhost";
 var port = ":3000";
 var tokenList  = [
@@ -55,7 +76,7 @@ function postRequest(endpoint, port, path, jsonData,callback) {
 
 // function to call POST requests for each Jawbone activity
 function sendRequests(token, callback) {
-    logger.debug("---Selecting token: " + token + "\n");
+    logger.info("---Selecting token: " + token.substr(0,15) + "***********\n");
     var json = {json: {token: token}};
     var i = 0;
 
