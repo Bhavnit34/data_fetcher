@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.js",
   "dependencies": {
-    "request": "^2.79.0"
+    "request": "^2.79.0",
+    "winston": "^2.3.0",
   },
   "devDependencies": {},
   "scripts": {
