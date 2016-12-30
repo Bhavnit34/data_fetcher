@@ -65,6 +65,9 @@ function postRequest(endpoint, port, path, jsonData,callback) {
                 var json_res = JSON.parse(JSON.stringify(body, null, 2));
                 if (!json_res.Jawbone.error && !json_res.DynamoDB.error){
                     logger.info("OK: postRequest(" + path + ")\n");
+                } else {
+                    logger.warn("FAIL: postRequest(" + path + ")\n");
+                    logger.warn(JSON.stringify(body, null, 2));
                 }
 
                 return callback();
