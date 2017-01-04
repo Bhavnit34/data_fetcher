@@ -59,6 +59,7 @@ var pathList = [
 
 // function to send a POST request to the rest_app to update the DB
 function postRequest(endpoint, port, path, jsonData,callback) {
+    var success = true;
     request.post(
         endpoint + port + path,
         jsonData,
@@ -69,13 +70,14 @@ function postRequest(endpoint, port, path, jsonData,callback) {
                 logger.debug('Successful!  Server responded with: \n', JSON.stringify(body, null, 2));
                 var json_res = JSON.parse(JSON.stringify(body, null, 2));
                 if (!json_res.Jawbone.error && !json_res.DynamoDB.error){
-                    logger.info("OK: postRequest(" + path + ")\n");
+                    logger.debug("OK: postRequest(" + path + ")\n");
                 } else {
                     logger.warn("FAIL: postRequest(" + path + ")\n");
                     logger.warn(JSON.stringify(body, null, 2));
+                    success = false;
                 }
 
-                return callback();
+                return callback(success);
             }
         });
 
@@ -84,18 +86,25 @@ function postRequest(endpoint, port, path, jsonData,callback) {
 
 // function to call POST requests for each Jawbone activity
 function sendRequests(token, callback) {
-    logger.info("---Selecting token: " + token.substr(0,15) + "***********\n");
+    logger.info("---Selecting token: " + token.substr(0,15) + "***********");
     var json = {json: {token: token}};
     var i = 0;
-
+    var successCount = 0;
 
     // callback function, executed once the previous post request has completed
-    var nextRequest = function () {
+    var nextRequest = function (success) {
+        // increment a success counter to check if all requests were successful
+        if (success) {successCount++;}
+
+        // proceed onto next request, or end
         i++;
         if (i < pathList.length) {
             postRequest(endpoint, port, "/api" + pathList[i], json, nextRequest);
         } else {
-            return callback();
+            // check all requests returned ok, and return status
+            var allSuccessful = true;
+            if (successCount != pathList.length) { allSuccessful = false; }
+            return callback(allSuccessful);
         }
     };
 
@@ -106,7 +115,14 @@ function sendRequests(token, callback) {
 
 // loop through each user (token) and update DB
 var i = 0;
-var nextUser = function() {
+var nextUser = function(allSuccessful) {
+    // check that all of the requests returned successfully
+    if (allSuccessful) {
+        logger.info("SUCCESS!\n");
+    } else {
+        logger.info("1+ REQUESTS FAILED. See above");
+    }
+
     i++;
     if (i < tokenList.length) {
         sendRequests(tokenList[i], nextUser);
