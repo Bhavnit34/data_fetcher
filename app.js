@@ -57,6 +57,18 @@ var pathList = [
     "/workouts/updateWorkouts"
 ];
 
+// create model for JSON returned from request
+var json_res = {
+        Jawbone: {
+            message : "",
+            error : false
+        },
+        DynamoDB: {
+            message : "",
+            error : false
+        }
+    };
+
 // function to send a POST request to the rest_app to update the DB
 function postRequest(endpoint, port, path, jsonData,callback) {
     var success = true;
@@ -68,7 +80,7 @@ function postRequest(endpoint, port, path, jsonData,callback) {
                 return logger.error('request failed with :' + httpResponse.statusCode.toString(), err);
             } else {
                 logger.debug('Successful!  Server responded with: \n', JSON.stringify(body, null, 2));
-                var json_res = JSON.parse(JSON.stringify(body, null, 2));
+                json_res = JSON.parse(JSON.stringify(body, null, 2));
                 if (!json_res.Jawbone.error && !json_res.DynamoDB.error){
                     logger.debug("OK: postRequest(" + path + ")\n");
                 } else {
