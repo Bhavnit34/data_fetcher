@@ -107,7 +107,6 @@ function postRequest(endpoint, port, path, jsonData,callback) {
 
 // function to call POST requests for each Jawbone activity
 function sendRequests(token, pathList, callback) {
-    logger.info();
     var json = {json: {token: token, limit: 5}};
     var i = 0;
     var successCount = 0;
@@ -147,6 +146,8 @@ var nextUser = function(allSuccessful, pathList) {
     i++;
     if (i < tokenList.length) {
         sendRequests(tokenList[i], pathList, nextUser);
+    } else {
+        i = 0; // reset i so that it will start again on next interval
     }
 };
 
@@ -172,8 +173,8 @@ function start() {
         we need to wait a bit before scheduling the next one. Once begun they shouldn't collide again.
     */
     sendRequests24();
-    setTimeout(sendRequests4(), 5000); // wait 5 seconds then start
-    setTimeout(sendRequests1(), 10000); // wait 10 seconds then start
+    setTimeout(sendRequests4, 5000); // wait 5 seconds then start
+    setTimeout(sendRequests1, 10000); // wait 10 seconds then start
 }
 
 start();
