@@ -153,23 +153,27 @@ var nextUser = function(allSuccessful, pathList) {
 
 function sendRequests24() {
     sendRequests(tokenList[0], pathList_24h, nextUser);
-    setTimeout(sendRequests24, 86400);
+    setTimeout(sendRequests24, 86400000);
 }
 
 function sendRequests4() {
     sendRequests(tokenList[0], pathList_4h, nextUser);
-    setTimeout(sendRequests4, 86400);
+    setTimeout(sendRequests4, 14400000);
 }
 
 function sendRequests1() {
     sendRequests(tokenList[0], pathList_1h, nextUser);
-    setTimeout(sendRequests1, 86400);
+    setTimeout(sendRequests1, 3600000);
 }
 
 function start() {
+    /*
+        start each process, however at the beginning they will run at once and access shared variables, therefore
+        we need to wait a bit before scheduling the next one. Once begun they shouldn't collide again.
+    */
     sendRequests24();
-    sendRequests4();
-    sendRequests1();
+    setTimeout(sendRequests4(), 5000); // wait 5 seconds then start
+    setTimeout(sendRequests1(), 10000); // wait 10 seconds then start
 }
 
 start();
