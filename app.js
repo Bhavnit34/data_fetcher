@@ -107,7 +107,7 @@ function postRequest(endpoint, port, path, jsonData,callback) {
 
 // function to call POST requests for each Jawbone activity
 function sendRequests(token, pathList, callback) {
-    logger.info("---Selecting token: " + token.substr(0,15) + "***********");
+    logger.info();
     var json = {json: {token: token, limit: 5}};
     var i = 0;
     var successCount = 0;
@@ -139,7 +139,7 @@ var i = 0;
 var nextUser = function(allSuccessful, pathList) {
     // check that all of the requests returned successfully
     if (allSuccessful) {
-        logger.info("SUCCESS!\n");
+        logger.info("SUCCESS! - (" + pathList.toString() + ") (token: " + tokenList[i].substr(0,15) + "***********)");
     } else {
         logger.info("1+ REQUESTS FAILED. See above");
     }
