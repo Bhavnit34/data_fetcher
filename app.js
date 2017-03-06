@@ -47,15 +47,21 @@ var tokenList  = [
 ];
 
 // list of endpoints to call
-var pathList = [
-    "/settings/updateSettings",
+var pathList_1h = [
     "/moves/updateMoves",
-    "/heartrate/updateHeartRates",
+    "/sleeps/updateSleeps"
+];
+
+var pathList_24h = [
     "/body/updateBodyEvents",
-    "/mood/updateMood",
-    "/sleeps/updateSleeps",
+    "/settings/updateSettings"
+];
+
+var pathList_4h = [
+    "/heartrate/updateHeartRates",
     "/workouts/updateWorkouts"
 ];
+
 
 // create model for JSON returned from request
 var json_res = {
@@ -76,8 +82,11 @@ function postRequest(endpoint, port, path, jsonData,callback) {
         endpoint + port + path,
         jsonData,
         function optionalCallback(err, httpResponse, body) {
+            if (err) {
+                return logger.error('request failed with :', err);
+            }
             if (httpResponse.statusCode != 200) {
-                return logger.error('request failed with :' + httpResponse.statusCode.toString(), err);
+                return logger.error('request failed with :' + httpResponse.statusCode.toString(), body);
             } else {
                 logger.debug('Successful!  Server responded with: \n', JSON.stringify(body, null, 2));
                 json_res = JSON.parse(JSON.stringify(body, null, 2));
@@ -97,7 +106,7 @@ function postRequest(endpoint, port, path, jsonData,callback) {
 
 
 // function to call POST requests for each Jawbone activity
-function sendRequests(token, callback) {
+function sendRequests(token, pathList, callback) {
     logger.info("---Selecting token: " + token.substr(0,15) + "***********");
     var json = {json: {token: token, limit: 5}};
     var i = 0;
@@ -116,7 +125,7 @@ function sendRequests(token, callback) {
             // check all requests returned ok, and return status
             var allSuccessful = true;
             if (successCount != pathList.length) { allSuccessful = false; }
-            return callback(allSuccessful);
+            return callback(allSuccessful, pathList);
         }
     };
 
@@ -127,7 +136,7 @@ function sendRequests(token, callback) {
 
 // loop through each user (token) and update DB
 var i = 0;
-var nextUser = function(allSuccessful) {
+var nextUser = function(allSuccessful, pathList) {
     // check that all of the requests returned successfully
     if (allSuccessful) {
         logger.info("SUCCESS!\n");
@@ -137,9 +146,30 @@ var nextUser = function(allSuccessful) {
 
     i++;
     if (i < tokenList.length) {
-        sendRequests(tokenList[i], nextUser);
+        sendRequests(tokenList[i], pathList, nextUser);
     }
 };
 
-// first user request, which triggers the rest via the callback
-sendRequests(tokenList[i], nextUser);
+
+function sendRequests24() {
+    sendRequests(tokenList[0], pathList_24h, nextUser);
+    setTimeout(sendRequests24, 86400);
+}
+
+function sendRequests4() {
+    sendRequests(tokenList[0], pathList_4h, nextUser);
+    setTimeout(sendRequests4, 86400);
+}
+
+function sendRequests1() {
+    sendRequests(tokenList[0], pathList_1h, nextUser);
+    setTimeout(sendRequests1, 86400);
+}
+
+function start() {
+    sendRequests24();
+    sendRequests4();
+    sendRequests1();
+}
+
+start();
