@@ -99,7 +99,7 @@ function postRequest(endpoint, port, path, jsonData,callback) {
 // function to call POST requests for each Jawbone activity
 function sendRequests(token, callback) {
     logger.info("---Selecting token: " + token.substr(0,15) + "***********");
-    var json = {json: {token: token}};
+    var json = {json: {token: token, limit: 5}};
     var i = 0;
     var successCount = 0;
 
