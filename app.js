@@ -46,6 +46,11 @@ var tokenList  = [
     'u1r_4oEFjcGXMeBUkvDdikHZjwblB7qMPAxB0JJSceafi4xZAqlZmKvq7UPSdXGUnHGv14YiRz_SZK_iqV7QIVECdgRlo_GULMgGZS0EumxrKbZFiOmnmAPChBPDZ5JP' // dan token
 ];
 
+var userIdList = [
+    "BRx5p_mMpSn-RjknXdn3dA", // bhav userID
+    "BRx5p_mMpSnKSKC3Fz2aqw" // dan userID
+];
+
 // list of endpoints to call
 var pathList_1h = [
     "/moves/updateMoves",
@@ -107,8 +112,8 @@ function postRequest(endpoint, port, path, jsonData,callback) {
 
 
 // function to call POST requests for each Jawbone activity
-function sendRequests(token, pathList, callback) {
-    var json = {json: {token: token, limit: 5}};
+function sendRequests(token, userId, pathList, callback) {
+    var json = {json: {token: token, userId: userId, limit: 5}};
     var i = 0;
     var successCount = 0;
 
@@ -146,7 +151,7 @@ var nextUser = function(allSuccessful, pathList) {
 
     i++;
     if (i < tokenList.length) {
-        sendRequests(tokenList[i], pathList, nextUser);
+        sendRequests(tokenList[i], userIdList[i], pathList, nextUser);
     } else {
         i = 0; // reset i so that it will start again on next interval
     }
@@ -154,17 +159,17 @@ var nextUser = function(allSuccessful, pathList) {
 
 
 function sendRequests24() {
-    sendRequests(tokenList[0], pathList_24h, nextUser);
+    sendRequests(tokenList[0], userIdList[0], pathList_24h, nextUser);
     setTimeout(sendRequests24, 86400000);
 }
 
 function sendRequests4() {
-    sendRequests(tokenList[0], pathList_4h, nextUser);
+    sendRequests(tokenList[0], userIdList[0], pathList_4h, nextUser);
     setTimeout(sendRequests4, 14400000);
 }
 
 function sendRequests1() {
-    sendRequests(tokenList[0], pathList_1h, nextUser);
+    sendRequests(tokenList[0], userIdList[0], pathList_1h, nextUser);
     setTimeout(sendRequests1, 3600000);
 }
 
