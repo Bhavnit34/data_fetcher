@@ -124,7 +124,9 @@ function sendRequests(token, userId, pathList, callback) {
 
         // proceed onto next request, or end
         i++;
+
         if (i < pathList.length) {
+            if (pathList[i] == "/moves/updateMoves") { json.limit = 2; }
             postRequest(endpoint, port, "/api" + pathList[i], json, nextRequest);
         } else {
             // check all requests returned ok, and return status
@@ -134,6 +136,7 @@ function sendRequests(token, userId, pathList, callback) {
         }
     };
 
+    if (pathList[i] == "/moves/updateMoves") { json.limit = 2; }
     // first post request, which triggers the rest via the callback
     postRequest(endpoint, port, "/api" + pathList[i], json, nextRequest);
 }
