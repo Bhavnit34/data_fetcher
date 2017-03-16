@@ -60,7 +60,9 @@ var pathList_1h = [
 var pathList_24h = [
     "/body/updateBodyEvents",
     "/settings/updateSettings",
-    "/heartrate/updateStats"
+    "/heartrate/updateStats",
+    "/moves/updateStats",
+    "/sleeps/updateStats"
 ];
 
 var pathList_4h = [
