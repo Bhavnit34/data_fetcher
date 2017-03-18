@@ -62,7 +62,8 @@ var pathList_24h = [
     "/settings/updateSettings",
     "/heartrate/updateStats",
     "/moves/updateStats",
-    "/sleeps/updateStats"
+    "/sleeps/updateStats",
+    "/workouts/updateStats"
 ];
 
 var pathList_4h = [
