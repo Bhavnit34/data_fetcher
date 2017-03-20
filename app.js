@@ -53,8 +53,8 @@ var userIdList = [
 
 // list of endpoints to call
 var pathList_1h = [
-    "/moves/updateMoves",
-    "/sleeps/updateSleeps"
+    "/sleeps/updateSleeps",
+    "/moves/updateMoves"
 ];
 
 var pathList_24h = [
@@ -92,10 +92,13 @@ function postRequest(endpoint, port, path, jsonData,callback) {
         jsonData,
         function optionalCallback(err, httpResponse, body) {
             if (err) {
-                return logger.error('request failed with :', err);
+                if (httpResponse.statusCode == 404)
+                logger.error('request failed with :', err.toString());
+                return callback(false);
             }
             if (httpResponse.statusCode != 200) {
-                return logger.error('request failed with :' + httpResponse.statusCode.toString(), body);
+                logger.error('request failed with :' + httpResponse.statusCode.toString(), body);
+                success = false;
             } else {
                 logger.debug('Successful!  Server responded with: \n', JSON.stringify(body, null, 2));
                 json_res = JSON.parse(JSON.stringify(body, null, 2));
