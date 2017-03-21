@@ -54,7 +54,9 @@ var userIdList = [
 // list of endpoints to call
 var pathList_1h = [
     "/sleeps/updateSleeps",
-    "/moves/updateMoves"
+    "/moves/updateMoves",
+    "/sleeps/askAboutSleep",
+    "/moves/askAboutDay"
 ];
 
 var pathList_24h = [
@@ -92,7 +94,6 @@ function postRequest(endpoint, port, path, jsonData,callback) {
         jsonData,
         function optionalCallback(err, httpResponse, body) {
             if (err) {
-                if (httpResponse.statusCode == 404)
                 logger.error('request failed with :', err.toString());
                 return callback(false);
             }
@@ -187,9 +188,9 @@ function start() {
         start each process, however at the beginning they will run at once and access shared variables, therefore
         we need to wait a bit before scheduling the next one. Once begun they shouldn't collide again.
     */
-    sendRequests24();
+    sendRequests1();
     setTimeout(sendRequests4, 5000); // wait 5 seconds then start
-    setTimeout(sendRequests1, 10000); // wait 10 seconds then start
+    setTimeout(sendRequests24, 10000); // wait 10 seconds then start
 }
 
 start();
