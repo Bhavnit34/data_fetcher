@@ -55,8 +55,11 @@ var userIdList = [
 var pathList_1h = [
     "/sleeps/updateSleeps",
     "/moves/updateMoves",
-    "/sleeps/askAboutSleep",
-    "/moves/askAboutDay"
+    "/workouts/updateWorkouts",
+    "/telegram/sleeps/askAboutSleep",
+    "/telegram/moves/askAboutDay",
+    "/telegram/workouts/askAboutWorkout",
+    "/weather/updateWorkoutWeather"
 ];
 
 var pathList_24h = [
@@ -69,8 +72,7 @@ var pathList_24h = [
 ];
 
 var pathList_4h = [
-    "/heartrate/updateHeartRates",
-    "/workouts/updateWorkouts"
+    "/heartrate/updateHeartRates"
 ];
 
 
@@ -97,7 +99,7 @@ function postRequest(endpoint, port, path, jsonData,callback) {
                 logger.error('request failed with :', err.toString());
                 return callback(false);
             }
-            if (httpResponse.statusCode != 200) {
+            if (httpResponse.statusCode !== 200) {
                 logger.error('request failed with :' + httpResponse.statusCode.toString(), body);
                 success = false;
             } else {
@@ -120,7 +122,7 @@ function postRequest(endpoint, port, path, jsonData,callback) {
 
 // function to call POST requests for each Jawbone activity
 function sendRequests(token, userId, pathList, callback) {
-    var json = {json: {token: token, userId: userId, limit: 5}};
+    var json = {json: {token: token, userId: userId, limit: 2}};
     var i = 0;
     var successCount = 0;
 
@@ -133,17 +135,15 @@ function sendRequests(token, userId, pathList, callback) {
         i++;
 
         if (i < pathList.length) {
-            if (pathList[i] == "/moves/updateMoves") { json.limit = 2; }
             postRequest(endpoint, port, "/api" + pathList[i], json, nextRequest);
         } else {
             // check all requests returned ok, and return status
             var allSuccessful = true;
-            if (successCount != pathList.length) { allSuccessful = false; }
+            if (successCount !== pathList.length) { allSuccessful = false; }
             return callback(allSuccessful, pathList);
         }
     };
 
-    if (pathList[i] == "/moves/updateMoves") { json.limit = 2; }
     // first post request, which triggers the rest via the callback
     postRequest(endpoint, port, "/api" + pathList[i], json, nextRequest);
 }
