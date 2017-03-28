@@ -68,7 +68,8 @@ var pathList_24h = [
     "/heartrate/updateStats",
     "/moves/updateStats",
     "/sleeps/updateStats",
-    "/workouts/updateStats"
+    "/workouts/updateStats",
+    "/mood/updateStats"
 ];
 
 var pathList_4h = [
