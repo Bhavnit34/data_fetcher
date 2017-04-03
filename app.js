@@ -65,11 +65,11 @@ var pathList_1h = [
 var pathList_24h = [
     "/body/updateBodyEvents",
     "/settings/updateSettings",
-    "/heartrate/updateStats",
-    "/moves/updateStats",
-    "/sleeps/updateStats",
-    "/workouts/updateStats",
-    "/mood/updateStats"
+    "/stats/heartrate/updateStats",
+    "/stats/moves/updateStats",
+    "/stats/sleeps/updateStats",
+    "/stats/workouts/updateStats",
+    "/stats/mood/updateStats"
 ];
 
 var pathList_4h = [
@@ -79,14 +79,22 @@ var pathList_4h = [
 
 // create model for JSON returned from request
 var json_res = {
-        Jawbone: {
-            message : "",
+    Jawbone: {
+        message : "",
             error : false
-        },
-        DynamoDB: {
-            message : "",
+    },
+    DynamoDB: {
+        message : "",
             error : false
-        }
+    },
+    Telegram: {
+        message : "",
+            error : false
+    },
+    OpenWeather: {
+        message : "",
+            error : false
+    }
     };
 
 // function to send a POST request to the rest_app to update the DB
