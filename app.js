@@ -33,7 +33,8 @@ var logger = new (winston.Logger)({
         }),
         new (winston.transports.File)({
             filename: logPath + "/fetcher.log",
-            "level": logLevel
+            "level": logLevel,
+            json : false
         })
     ]
 });
